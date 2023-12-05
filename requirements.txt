@@ -1,0 +1,6 @@
+streamlit
+scikit-learn
+tensorflow
+keras
+Pillow
+st-pages
