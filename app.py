@@ -28,33 +28,9 @@ Aplikasi ini dikembangkan oleh tim yang berdedikasi dalam bidang Teknologi Artif
 Kami berkomumitmen akan terus mengembangkan apa yang sudah kami pelajari dengan baik.
 """)
 
-# Foto pertama
-image1 = "Jackyyy.jpg"
-
-# Foto kedua
-image2 = "Jackyyy.jpg"
-
-# Foto ketiga
-image3 = "Jackyyy.jpg"
-
-# Ukuran foto
-image_width = 200
-
-# Buat kolom
-st.columns(3)
-
-# Tambahkan foto pertama ke kolom pertama
-st.column(1).image(image1, width=200)
-
-# Tambahkan foto kedua ke kolom kedua
-st.column(2).image(image2, width=200)
-
-# Tambahkan foto ketiga ke kolom ketiga
-st.column(3).image(image3, width=200)
-
 show_pages(
     [
         Page("app.py", "Pendahuluan"),
-         Page("pages/ Penjelasan Segmentasi"),
+         Page("pages\Penjelasan Segmentasi", "Penjelasan Segmentasi"),
     ]
 )
