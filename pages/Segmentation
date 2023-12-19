@@ -1,0 +1,89 @@
+import streamlit as st
+import os
+from PIL import Image
+import base64
+import io
+
+st.title('MRI Condyle Segmentation Application')
+
+option = st.selectbox(
+    'Select option',
+    ('Single MRI scan', 'Multiple MRI scans')
+)
+
+uploaded_files = st.file_uploader("Choose MRI scan files", type=["dcm", "png", "jpg"], accept_multiple_files=True)
+
+segmented_images = []
+
+if uploaded_files is not None:
+    for uploaded_file in uploaded_files:
+        file_type = uploaded_file.name.split(".")[-1]
+        file_name = f'temp.{file_type}'
+        with open(file_name, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.write(f'Uploaded MRI scan: {file_name}')
+
+        # Resize the image while maintaining aspect ratio
+        max_size = (224, 224)
+        image = Image.open(file_name)
+        image.thumbnail(max_size)
+        st.image(image, caption=file_name, use_column_width=True)
+
+        st.write('Uploaded file size: ', os.path.getsize(file_name))
+        if os.path.getsize(file_name) > 200 * 224 * 224:
+            st.write('File size exceeds 200MB. Please upload a smaller file.')
+
+        # Button to trigger segmentation
+        if st.button("Segment MRI Scan"):
+            try:
+                # Create the Segmented_images folder if not exists
+                segmented_image_folder = 'Segmented_images'
+                os.makedirs(segmented_image_folder, exist_ok=True)
+
+                # Simulate segmentation process by saving a segmented image
+                # Adjust this part based on your segmentation logic
+                segmented_image_name = f'segmented_{file_name}'
+                segmented_image_path = os.path.join(segmented_image_folder, segmented_image_name)
+                segmented_image = Image.open(segmented_image_path)
+                segmented_images.append(segmented_image_path)
+                st.write('Segmented MRI scan:')
+                st.image(segmented_image, caption='Hasil Segmentasi', use_column_width=True)
+
+                # Save temporary files
+                with open(file_name, "rb") as f:
+                    base64_uploaded_file = base64.b64encode(f.read()).decode()
+
+                with open(segmented_image_path, "rb") as f:
+                    base64_segmented_image = base64.b64encode(f.read()).decode()
+
+                # Specify the correct MIME type for the segmented image
+                segmented_mime_type = 'image/png'  # Replace with the correct MIME type
+
+                st.download_button(
+                    label="Download segmented MRI scan",
+                    data=base64_segmented_image,
+                    file_name=f'segmented_mri_scan.png',
+                    mime=segmented_mime_type
+                )
+
+                # Specify the correct MIME type for the original image
+                original_mime_type = f'image/{file_type}'
+
+                st.download_button(
+                    label="Download original MRI scan",
+                    data=base64_uploaded_file,
+                    file_name=f'original_mri_scan.{file_type}',
+                    mime=original_mime_type
+                )
+
+            except FileNotFoundError:
+                st.write('Segmented image not found. Please ensure that it is saved correctly.')
+            finally:
+                # Clean up temporary files
+                os.remove(file_name)
+
+if len(segmented_images) > 0:
+    st.write('Combined segmented images:')
+    for img_path in segmented_images:
+        segmented_image = Image.open(img_path)
+        st.image(segmented_image, caption='Gambar yang telah di segmentasi', use_column_width=True)
