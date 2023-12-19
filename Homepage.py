@@ -47,6 +47,6 @@ Kami berkomitmen akan terus mengembangkan apa yang sudah kami pelajari dengan ba
 show_pages(
     [
         Page("Homepage.py", "🖥️Homepage"),
-         Page("pages\Penjelasan Segmentasi", "Penjelasan Segmentasi"),
+         Page("pages\Segmentation", "Segmentation"),
     ]
 )

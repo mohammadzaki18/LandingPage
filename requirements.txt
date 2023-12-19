@@ -4,3 +4,6 @@ tensorflow
 keras
 Pillow
 st-pages
+torch
+torchvision
+unet
